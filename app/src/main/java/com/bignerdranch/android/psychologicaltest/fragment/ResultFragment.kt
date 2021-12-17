@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.bignerdranch.android.psychologicaltest.R
+import kotlinx.android.synthetic.main.fragment_result.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +25,9 @@ class ResultFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    lateinit var navController: NavController
+    var selection = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,7 +41,22 @@ class ResultFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
+        selection = arguments?.getInt("index")?:-1
+
         return inflater.inflate(R.layout.fragment_result, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        navController = Navigation.findNavController(view)
+
+        setResult(selection)
+
+        btn_home.setOnClickListener {
+            navController.navigate(R.id.action_resultFragment_to_mainFragment)
+        }
     }
 
     companion object {
@@ -56,5 +77,26 @@ class ResultFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    fun setResult(selection : Int) {
+        when(selection) {
+            1 -> {
+                tv_main.text = "You're a QUITTER!"
+                tv_sub.text = "You can let the person easily."
+            }
+            2 -> {
+                tv_main.text = "You should focus on yourself."
+                tv_sub.text = "You become really clingy to your ex."
+            }
+            3 -> {
+                tv_main.text = "You should take it easy."
+                tv_sub.text = "You can do crazy things no matter what it takes."
+            }
+            4 -> {
+                tv_main.text = "You are pretty mature."
+                tv_sub.text = "You can easily accept the break-up."
+            }
+        }
     }
 }
